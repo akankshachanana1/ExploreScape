@@ -13,6 +13,7 @@ const Campground = require('./models/campground');
 const dbUrl=process.env.DB_URL||'mongodb://127.0.0.1:27017/yelp-camp';
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+
 // const session =require('express-session');
 mongoose.connect(dbUrl);
 // mongoose.connect(dbUrl)
