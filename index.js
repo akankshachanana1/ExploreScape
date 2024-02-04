@@ -10,11 +10,11 @@ const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Campground = require('./models/campground');
-const dbUrl=process.env.DB_URL;
+const dbUrl=process.env.DB_URL||'mongodb://127.0.0.1:27017/yelp-camp';
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
+// const session =require('express-session');
+mongoose.connect(dbUrl);
 // mongoose.connect(dbUrl)
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -30,7 +30,23 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
+});
+store.on("error",function(e){
+console.log("Session store error",e)
+})
+const sessionConfig={
+    store,
+    secret:'thisshouldbeabettersecret!',
+    resave:false,
+    saveUninitialized:true
+}
+app.use(session(sessionConfig));
 const validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
     if (error) {
