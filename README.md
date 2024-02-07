@@ -7,7 +7,7 @@ Provide nature enthusiasts with a wide range of available campsites also allowin
 ## Project Specifications
 <ul>
  <li>display available campsites  </li>
-<li> allow users to add more to this list</li>
+<li> allow users to add/update any site</li>
 <li>provide current price and description of the site</li>
 </ul>
 
